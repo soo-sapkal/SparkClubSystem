@@ -171,24 +171,6 @@ function Navbar() {
           blur={14}
           className="px-6 md:px-20 flex items-center justify-between border-b border-white/[0.07]"
         >
-          <NavbarContent navigate={navigate} setMobileOpen={setMobileOpen} mobileOpen={mobileOpen} />
-        </GlassSurface>
-      ) : (
-        <div className="h-16 px-6 md:px-20 flex items-center justify-between">
-          <NavbarContent navigate={navigate} setMobileOpen={setMobileOpen} mobileOpen={mobileOpen} />
-        </div>
-      )}
-      {scrolled ? (
-        <GlassSurface
-          width="100%"
-          height="64"
-          borderRadius={0}
-          backgroundOpacity={0.85}
-          saturation={1.5}
-          distortionScale={-100}
-          blur={14}
-          className="px-6 md:px-20 flex items-center justify-between border-b border-white/[0.07]"
-        >
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] flex items-center justify-center">
               <Zap size={14} className="text-[#020408]" />
