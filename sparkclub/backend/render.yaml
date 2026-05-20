@@ -1,0 +1,10 @@
+{
+  "buildpacks": [
+    {
+      "builder": "heroku/nodejs"
+    }
+  ],
+  "database": {
+    "create": "sparkclub.db"
+  }
+}
