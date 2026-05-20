@@ -34,3 +34,17 @@
   .badge-rejected    { @apply text-xs px-2 py-0.5 rounded-full bg-red-900/60 text-red-300 border border-red-800; }
   .badge-under_review{ @apply text-xs px-2 py-0.5 rounded-full bg-blue-900/60 text-blue-300 border border-blue-800; }
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+

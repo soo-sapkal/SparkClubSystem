@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/layout/Layout';
 import LoginPage         from './pages/LoginPage';
+import LandingPage       from './pages/LandingPage';
 import DashboardPage     from './pages/DashboardPage';
 import BudgetsPage       from './pages/BudgetsPage';
 import TransactionsPage  from './pages/TransactionsPage';
@@ -80,15 +81,15 @@ function SuperAdminRoute({ children }) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
 
       {/* Protected routes with Layout */}
-      <Route path="/" element={
+      <Route element={
         <ProtectedRoute>
           <Layout />
         </ProtectedRoute>
       }>
-        <Route index element={<Navigate to="/club-head" replace />} />
 
         {/* Club Head Executive Dashboard */}
         <Route path="club-head" element={

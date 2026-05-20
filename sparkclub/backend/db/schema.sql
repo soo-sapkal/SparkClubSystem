@@ -245,7 +245,7 @@ INSERT OR IGNORE INTO users (id, club_id, name, email, password_hash, role, avat
   (8, 1, 'Meera Nair',    'meera@sparkclub.edu',   '$2b$10$n190w6KHGGI3vdW9nNvsHuvo9z9fxh22u2vggTVKBkQeHjVpiZP.6', 'member',    'MN', 'MITU2023007', 'A+', '2023-2027', 'Computer Engineering'),
   (9, 1, 'Karan Shah',    'karan@sparkclub.edu',   '$2b$10$n190w6KHGGI3vdW9nNvsHuvo9z9fxh22u2vggTVKBkQeHjVpiZP.6', 'member',    'KS', 'MITU2023008', 'O-', '2023-2027', 'Electronics'),
   (10, 1, 'Dr. Smitha Rao', 'smitha@faculty.edu',    '$2b$10$n190w6KHGGI3vdW9nNvsHuvo9z9fxh22u2vggTVKBkQeHjVpiZP.6', 'faculty',   'SR', NULL, NULL, NULL, 'Faculty'),
-  (11, NULL, 'Super Admin', 'admin@sparkclub.edu',   '$2b$10$wcpkzYZsmB/0PWu32121j.VEpx3fOtz80U9Xl6A2zhRb6VBsUjSF2', 'super_admin', 'SA', NULL, NULL, NULL, 'Platform Admin');
+  (11, NULL, 'Super Admin', 'admin@sparkclub.edu',   '$2b$10$n190w6KHGGI3vdW9nNvsHuvo9z9fxh22u2vggTVKBkQeHjVpiZP.6', 'super_admin', 'SA', NULL, NULL, NULL, 'Platform Admin');
 
 -- Budget Categories
 INSERT OR IGNORE INTO budget_categories (id, club_id, name, color, icon) VALUES
