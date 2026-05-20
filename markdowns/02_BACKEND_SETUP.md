@@ -32,7 +32,6 @@ Update `package.json` scripts:
 PORT=3001
 JWT_SECRET=sparkclub_super_secret_jwt_key_change_in_production
 JWT_EXPIRES_IN=7d
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
 NODE_ENV=development
 ```
 

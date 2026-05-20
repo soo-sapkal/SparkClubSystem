@@ -8,7 +8,6 @@ import BudgetsPage       from './pages/BudgetsPage';
 import TransactionsPage  from './pages/TransactionsPage';
 import FundingPage       from './pages/FundingPage';
 import ReportsPage       from './pages/ReportsPage';
-import AIAssistantPage   from './pages/AIAssistantPage';
 import ClubHeadDashboard from './pages/ClubHeadDashboard';
 import EventManagement   from './pages/EventManagement';
 import TasksPage         from './pages/TasksPage';
@@ -111,7 +110,6 @@ export default function App() {
         <Route path="transactions"  element={<TransactionsPage />} />
         <Route path="funding"        element={<FundingPage />} />
         <Route path="reports"        element={<ReportsPage />} />
-        <Route path="ai"             element={<AIAssistantPage />} />
       </Route>
 
       {/* Faculty Coordinator Routes - separate Layout wrapper */}

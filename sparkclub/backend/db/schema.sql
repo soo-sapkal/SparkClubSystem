@@ -83,15 +83,6 @@ CREATE TABLE IF NOT EXISTS funding_requests (
   reviewed_at   TEXT
 );
 
-CREATE TABLE IF NOT EXISTS ai_conversations (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  club_id    INTEGER NOT NULL REFERENCES clubs(id),
-  user_id    INTEGER NOT NULL REFERENCES users(id),
-  role       TEXT NOT NULL CHECK(role IN ('user','assistant')),
-  content    TEXT NOT NULL,
-  created_at TEXT DEFAULT (datetime('now'))
-);
-
 -- ============================================================
 -- CLUB HEAD DASHBOARD TABLES
 -- ============================================================

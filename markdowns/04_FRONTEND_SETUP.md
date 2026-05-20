@@ -167,12 +167,6 @@ export const reportsAPI = {
   summary:          (year) =>        api.get('/reports/summary', { params: { year } }),
 };
 
-// ── AI ────────────────────────────────────────────────────
-export const aiAPI = {
-  chat:        (message, history) => api.post('/ai/chat', { message, history }),
-  suggestions: () =>                 api.get('/ai/suggestions'),
-};
-
 export default api;
 ```
 
@@ -268,7 +262,6 @@ import BudgetsPage     from './pages/BudgetsPage';
 import TransactionsPage from './pages/TransactionsPage';
 import FundingPage     from './pages/FundingPage';
 import ReportsPage     from './pages/ReportsPage';
-import AIAssistantPage from './pages/AIAssistantPage';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -291,7 +284,6 @@ export default function App() {
         <Route path="transactions" element={<TransactionsPage />} />
         <Route path="funding"      element={<FundingPage />} />
         <Route path="reports"      element={<ReportsPage />} />
-        <Route path="ai"           element={<AIAssistantPage />} />
       </Route>
     </Routes>
   );
@@ -342,7 +334,7 @@ export default function LoginPage() {
 }
 ```
 
-Create stubs for: `DashboardPage.jsx`, `BudgetsPage.jsx`, `TransactionsPage.jsx`, `FundingPage.jsx`, `ReportsPage.jsx`, `AIAssistantPage.jsx` — all identical to the Login stub with their own label.
+Create stubs for: `DashboardPage.jsx`, `BudgetsPage.jsx`, `TransactionsPage.jsx`, `FundingPage.jsx`, `ReportsPage.jsx` — all identical to the Login stub with their own label.
 
 Create `frontend/src/components/layout/Layout.jsx` (stub):
 ```jsx

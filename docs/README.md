@@ -1,6 +1,6 @@
 # SparkClub Documentation Portal
 
-Welcome to the SparkClub Documentation Portal. SparkClub is a multi-tenant ERP platform designed specifically for college club management, financial governance, event tracking, and student development tracking, enhanced by AI capabilities.
+Welcome to the SparkClub Documentation Portal. SparkClub is a multi-tenant ERP platform designed specifically for college club management, financial governance, event tracking, and student development tracking.
 
 ## Document Directory Map
 
@@ -11,7 +11,6 @@ Welcome to the SparkClub Documentation Portal. SparkClub is a multi-tenant ERP p
 * [Multi-Tenant Model](./architecture/multi-tenant-model.md) - Scoping, isolation, and data policies.
 * [Auth & RBAC](./architecture/auth-rbac.md) - JWT validation and roles matrix.
 * [Workflow Engine](./architecture/workflow-engine.md) - Request lifecycle and transition logic.
-* [AI Architecture](./architecture/ai-architecture.md) - Claude integration, prompts, and storage.
 * [Integrations](./architecture/integrations.md) - Exporters, exports structure, and APIs.
 
 ### 📦 [Product](./product/product-overview.md)
@@ -32,7 +31,6 @@ Welcome to the SparkClub Documentation Portal. SparkClub is a multi-tenant ERP p
 * [Communication System](./features/communication-system.md) - Messages, notifications, alerts, and templates.
 * [Analytics & Reporting](./features/analytics.md) - Recharts views, export formatting.
 * [Audit & Compliance](./features/audit-compliance.md) - Logs, fraud indicators, policy checks.
-* [AI Assistant](./features/ai-assistant.md) - Interactive assistant, tips, and prompt details.
 * [Document Management](./features/document-management.md) - Bill uploads, MoU archives, version control.
 * [Notification System](./features/notification-system.md) - Triggers, SLAs, and escalation hierarchies.
 

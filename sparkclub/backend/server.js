@@ -24,7 +24,6 @@ app.use('/api/budgets',      require('./routes/budgets'));
 app.use('/api/transactions', require('./routes/transactions'));
 app.use('/api/funding',      require('./routes/funding'));
 app.use('/api/reports',      require('./routes/reports'));
-app.use('/api/ai',           require('./routes/ai'));
 app.use('/api/clubhead',     require('./routes/clubhead'));
 app.use('/api/events',       require('./routes/events'));
 app.use('/api/tasks',        require('./routes/tasks'));

@@ -130,12 +130,6 @@ export const reportsAPI = {
   summary:          (year) =>        api.get('/reports/summary', { params: { year } }),
 };
 
-// ── AI ────────────────────────────────────────────────────
-export const aiAPI = {
-  chat:        (message, history) => api.post('/ai/chat', { message, history }),
-  suggestions: () =>                 api.get('/ai/suggestions'),
-};
-
 // ── Faculty ─────────────────────────────────────────────────
 export const facultyAPI = {
   getDashboard:    () =>                 api.get('/faculty/dashboard'),

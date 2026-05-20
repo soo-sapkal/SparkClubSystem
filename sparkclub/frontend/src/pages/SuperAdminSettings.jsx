@@ -77,13 +77,6 @@ export default function SuperAdminSettings() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="p-4 bg-slate-900/30 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
-              <Zap className={`w-4 h-4 ${platformSettings?.aiEnabled ? 'text-emerald-400' : 'text-slate-500'}`} />
-              <p className="text-xs text-slate-500">AI Assistant</p>
-            </div>
-            <p className="text-sm font-medium">{platformSettings?.aiEnabled ? 'Enabled' : 'Disabled'}</p>
-          </div>
-          <div className="p-4 bg-slate-900/30 rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
               <Shield className={`w-4 h-4 ${platformSettings?.requireFacultyApproval ? 'text-yellow-400' : 'text-slate-500'}`} />
               <p className="text-xs text-slate-500">Faculty Approval</p>
             </div>

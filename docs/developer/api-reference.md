@@ -9,4 +9,3 @@ SparkClub API exposes RESTful endpoints. All requests require `Authorization: Be
 | `GET` | `/api/budgets` | Returns utilization stats | All |
 | `POST` | `/api/transactions` | Logs new transaction | Treasurer, Admin |
 | `PATCH` | `/api/funding/:id/review` | Updates status | Treasurer, Admin, Faculty |
-| `POST` | `/api/ai/chat` | AI response | All |

@@ -906,180 +906,7 @@ Reports page: pie chart, monthly bar chart, PDF export, Excel export.
 
 ---
 
-# Phase 11 — AI Assistant Page
-
-## Step 11.1 — `frontend/src/pages/AIAssistantPage.jsx`
-
-```jsx
-// frontend/src/pages/AIAssistantPage.jsx
-import { useState, useEffect, useRef } from 'react';
-import { aiAPI } from '../services/api';
-import { Bot, Send, Sparkles, RefreshCw, TrendingUp, AlertTriangle, Lightbulb, Shield } from 'lucide-react';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
-
-const SUGGESTION_ICONS = {
-  optimize: TrendingUp, warning: AlertTriangle,
-  opportunity: Lightbulb, best_practice: Shield
-};
-
-const SUGGESTION_COLORS = {
-  optimize: 'border-spark-500/30 bg-spark-500/5',
-  warning: 'border-yellow-500/30 bg-yellow-500/5',
-  opportunity: 'border-emerald-500/30 bg-emerald-500/5',
-  best_practice: 'border-blue-500/30 bg-blue-500/5',
-};
-
-const PROMPTS = [
-  'How is our budget utilization looking?',
-  'Which category is overspending?',
-  'Suggest ways to optimize our travel budget',
-  'What are best practices for club finance management?',
-  'Summarize this month\'s financial health',
-];
-
-export default function AIAssistantPage() {
-  const [messages, setMessages]     = useState([]);
-  const [input, setInput]           = useState('');
-  const [loading, setLoading]       = useState(false);
-  const [suggestions, setSuggestions] = useState([]);
-  const [sugLoading, setSugLoading] = useState(true);
-  const bottomRef = useRef(null);
-
-  useEffect(() => {
-    aiAPI.suggestions()
-      .then(r => setSuggestions(r.data))
-      .catch(() => {})
-      .finally(() => setSugLoading(false));
-  }, []);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  async function sendMessage(text) {
-    const msg = text || input.trim();
-    if (!msg) return;
-    setInput('');
-    const userMsg = { role: 'user', content: msg };
-    setMessages(prev => [...prev, userMsg]);
-    setLoading(true);
-    try {
-      const history = messages.slice(-10); // last 10 for context
-      const { data } = await aiAPI.chat(msg, history);
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
-    } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: '⚠️ Sorry, I couldn\'t connect to the AI service. Make sure ANTHROPIC_API_KEY is set.' }]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="h-full flex gap-6">
-      {/* Chat */}
-      <div className="flex-1 flex flex-col card min-h-0" style={{ maxHeight: 'calc(100vh - 5rem)' }}>
-        <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
-          <div className="w-8 h-8 bg-spark-500/20 rounded-lg flex items-center justify-center">
-            <Bot size={18} className="text-spark-400" />
-          </div>
-          <div>
-            <p className="font-semibold">SparkBot</p>
-            <p className="text-xs text-slate-500">AI Financial Assistant</p>
-          </div>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto py-4 space-y-4">
-          {messages.length === 0 && (
-            <div className="text-center py-12">
-              <Sparkles size={32} className="text-spark-400 mx-auto mb-3 opacity-60" />
-              <p className="text-slate-400">Ask me anything about SparkClub's finances</p>
-              <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                {PROMPTS.map(p => (
-                  <button key={p} onClick={() => sendMessage(p)} className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full transition-colors">
-                    {p}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
-                m.role === 'user'
-                  ? 'bg-spark-500 text-white rounded-tr-sm'
-                  : 'bg-slate-800 text-slate-200 rounded-tl-sm'
-              }`}>
-                {m.content}
-              </div>
-            </div>
-          ))}
-
-          {loading && (
-            <div className="flex justify-start">
-              <div className="bg-slate-800 rounded-2xl rounded-tl-sm px-4 py-3">
-                <div className="flex gap-1">
-                  {[0,1,2].map(i => (
-                    <div key={i} className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: `${i*0.15}s` }} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-          <div ref={bottomRef} />
-        </div>
-
-        {/* Input */}
-        <div className="pt-4 border-t border-slate-800 flex gap-2">
-          <input
-            className="input flex-1"
-            placeholder="Ask about budgets, spending, or financial advice…"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-            disabled={loading}
-          />
-          <button onClick={() => sendMessage()} disabled={loading || !input.trim()} className="btn-primary px-3">
-            <Send size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* Suggestions Sidebar */}
-      <div className="w-72 space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-sm">AI Suggestions</h3>
-          <button onClick={() => { setSugLoading(true); aiAPI.suggestions().then(r => setSuggestions(r.data)).finally(() => setSugLoading(false)); }} className="text-slate-500 hover:text-slate-300 p-1">
-            <RefreshCw size={14} />
-          </button>
-        </div>
-        {sugLoading ? <LoadingSpinner size={20} /> : suggestions.map((s, i) => {
-          const Icon = SUGGESTION_ICONS[s.type] || Lightbulb;
-          return (
-            <div key={i} className={`border rounded-xl p-3 cursor-pointer hover:opacity-80 transition-opacity ${SUGGESTION_COLORS[s.type]}`} onClick={() => sendMessage(s.title)}>
-              <div className="flex items-center gap-2 mb-1">
-                <Icon size={14} className="text-slate-300 flex-shrink-0" />
-                <p className="text-sm font-medium">{s.title}</p>
-              </div>
-              <p className="text-xs text-slate-400">{s.suggestion}</p>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-```
-
----
-
-## Checkpoint ✅ Phase 11
-AI page: multi-turn chat with SparkBot, quick prompts, AI-generated suggestions sidebar.
-
----
-
-# Phase 12 — Final Wiring & Run Instructions
+# Phase 11 — Final Wiring & Run Instructions
 
 ## Step 12.1 — Environment Files
 
@@ -1088,7 +915,6 @@ AI page: multi-turn chat with SparkBot, quick prompts, AI-generated suggestions 
 PORT=3001
 JWT_SECRET=sparkclub_super_secret_jwt_key_change_in_production
 JWT_EXPIRES_IN=7d
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxx
 NODE_ENV=development
 ```
 
@@ -1132,26 +958,24 @@ backend/
   routes/transactions.js        ✅
   routes/funding.js             ✅
   routes/reports.js             ✅
-  routes/ai.js                  ✅
 
 frontend/src/
   main.jsx                      ✅
   App.jsx                       ✅
   index.css                     ✅
-  context/AuthContext.jsx       ✅
+  context/AuthContext.jsx        ✅
   services/api.js               ✅
   utils/format.js               ✅
   components/layout/Layout.jsx  ✅
   components/layout/Sidebar.jsx ✅
-  components/ui/StatCard.jsx    ✅
+  components/ui/StatCard.jsx     ✅
   components/ui/LoadingSpinner.jsx ✅
-  pages/LoginPage.jsx           ✅
-  pages/DashboardPage.jsx       ✅
-  pages/BudgetsPage.jsx         ✅
-  pages/TransactionsPage.jsx    ✅
-  pages/FundingPage.jsx         ✅
-  pages/ReportsPage.jsx         ✅
-  pages/AIAssistantPage.jsx     ✅
+  pages/LoginPage.jsx            ✅
+  pages/DashboardPage.jsx        ✅
+  pages/BudgetsPage.jsx          ✅
+  pages/TransactionsPage.jsx      ✅
+  pages/FundingPage.jsx          ✅
+  pages/ReportsPage.jsx          ✅
 ```
 
 ---
@@ -1194,7 +1018,7 @@ This recreates the entire database from `schema.sql` including all seed data.
 ## Step 12.6 — Production Checklist
 
 - [ ] Change `JWT_SECRET` to a random 64-char string
-- [ ] Store `ANTHROPIC_API_KEY` securely (never commit to git)
+- [ ] Store secrets securely (never commit to git)
 - [ ] Add `db/sparkclub.db` to `.gitignore` (commit `schema.sql` only)
 - [ ] Add rate limiting: `npm install express-rate-limit`
 - [ ] Enable HTTPS in production
@@ -1210,5 +1034,5 @@ Complete app is running with:
 - Transaction CRUD (paginated, filtered)
 - Funding requests (submit, review, approve/reject)
 - Reports (pie chart, bar chart, PDF export, Excel export)
-- AI assistant (multi-turn chat, budget suggestions)
+- Event management, tasks, sponsors, documents
 - Single `schema.sql` seed file for portable database

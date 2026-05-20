@@ -1,7 +1,7 @@
 # Phase 3 — Backend API Routes
 
 ## Goal
-Implement all CRUD routes for dashboard, budgets, transactions, funding requests, reports, and AI. Then wire them into `server.js`.
+Implement all CRUD routes for dashboard, budgets, transactions, funding requests, reports, events, tasks, sponsors, documents, student-dev, audit, faculty, student, and superadmin. Then wire them into `server.js`.
 
 ---
 

@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Wallet, ArrowLeftRight,
-  FileText, BarChart3, Bot, LogOut, Zap,
+  FileText, BarChart3, LogOut, Zap,
   BookOpen, Users, Calendar, Briefcase, FileCheck, ShieldCheck,
   CheckSquare, PieChart, AlertTriangle, Search, GraduationCap,
   MessageSquare, Settings, User, DollarSign
@@ -15,7 +15,6 @@ const NAV_TREASURER = [
   { to: '/transactions',  icon: ArrowLeftRight, label: 'Transactions' },
   { to: '/funding',       icon: FileText,        label: 'Funding' },
   { to: '/reports',       icon: BarChart3,       label: 'Reports' },
-  { to: '/ai',            icon: Bot,             label: 'AI Assistant' },
 ];
 
 const NAV_CLUB_HEAD = [

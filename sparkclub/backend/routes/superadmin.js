@@ -261,7 +261,6 @@ router.get('/settings', (req, res) => {
       platformSettings: {
         allowNewClubs: true,
         requireFacultyApproval: true,
-        aiEnabled: true,
         defaultCurrency: 'INR'
       }
     });
