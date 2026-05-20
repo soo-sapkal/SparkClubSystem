@@ -1,9 +1,10 @@
 // frontend/src/components/layout/Sidebar.jsx
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../ui/Logo';
 import {
   LayoutDashboard, Wallet, ArrowLeftRight,
-  FileText, BarChart3, LogOut, Zap,
+  FileText, BarChart3, LogOut,
   BookOpen, Users, Calendar, Briefcase, FileCheck, ShieldCheck,
   CheckSquare, PieChart, AlertTriangle, Search, GraduationCap,
   MessageSquare, Settings, User, DollarSign
@@ -76,10 +77,8 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="px-6 py-5 border-b border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-spark-500 rounded-lg flex items-center justify-center">
-            <Zap size={16} className="text-white" />
-          </div>
-          <span className="font-bold text-lg tracking-tight">SparkClub</span>
+          <Logo variant="white" className="h-8 w-12 object-contain" />
+          <span className="font-bold text-lg tracking-tight text-white">SparkClub</span>
         </div>
         <p className="text-xs text-slate-500 mt-1 ml-10 capitalize">
           {isSuperAdmin ? 'Super Admin' : isFaculty ? 'Faculty Coordinator' : isStudent ? 'Student Dashboard' : isClubHead ? 'Club Head Dashboard' : 'Treasurer Dashboard'}

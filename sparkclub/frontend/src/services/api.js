@@ -28,8 +28,10 @@ api.interceptors.response.use(
 // ── Auth ───────────────────────────────────────────────────
 export const authAPI = {
   login: (email, password) => api.post('/auth/login', { email, password }),
+  signup: (data) => api.post('/auth/signup', data),
   register: (data) => api.post('/auth/register', data),
   me: () => api.get('/auth/me'),
+  logout: () => api.post('/auth/logout'),
 };
 
 // ── Club Head / Executive Dashboard ─────────────────────

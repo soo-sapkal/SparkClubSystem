@@ -22,6 +22,7 @@ const GlassSurface = ({
   yChannel = 'G',
   mixBlendMode = 'difference',
   className = '',
+  contentClassName = '',
   style = {}
 }) => {
   const uniqueId = useId().replace(/:/g, '-');
@@ -210,7 +211,7 @@ const GlassSurface = ({
         </defs>
       </svg>
 
-      <div className="glass-surface__content">{children}</div>
+      <div className={`glass-surface__content ${contentClassName}`}>{children}</div>
     </div>
   );
 };

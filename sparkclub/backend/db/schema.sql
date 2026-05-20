@@ -24,13 +24,18 @@ CREATE TABLE IF NOT EXISTS users (
   name         TEXT NOT NULL,
   email        TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
-  role         TEXT NOT NULL CHECK(role IN ('club_head','treasurer','member','admin','faculty','super_admin')) DEFAULT 'member',
+  role         TEXT NOT NULL CHECK(role IN ('club_head','treasurer','member','admin','faculty','super_admin','student_head','faculty_advisor','faculty_coordinator','department_lead','event_lead')) DEFAULT 'member',
   avatar_initials TEXT,
   prn          TEXT,
   blood_group TEXT,
   batch        TEXT,
   department   TEXT,
-  created_at   TEXT DEFAULT (datetime('now'))
+  phone        TEXT,
+  college      TEXT,
+  year         TEXT,
+  status       TEXT DEFAULT 'active' CHECK(status IN ('active','inactive')),
+  created_at   TEXT DEFAULT (datetime('now')),
+  updated_at   TEXT DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS budget_categories (

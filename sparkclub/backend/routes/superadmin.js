@@ -2,9 +2,21 @@
 const express = require('express');
 const router = express.Router();
 const { getDb } = require('../db/database');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken, requireSuperAdmin } = require('../middleware/auth');
 
 router.use(authenticateToken);
+router.use(requireSuperAdmin);
+
+const VALID_ROLES = ['member', 'student_head', 'treasurer', 'faculty_advisor', 'faculty_coordinator', 'club_head', 'department_lead', 'event_lead', 'admin', 'faculty', 'super_admin'];
+const PROMOTABLE_ROLES = ['student_head', 'treasurer', 'faculty_advisor', 'faculty_coordinator', 'department_lead', 'event_lead'];
+const BLOCKED_TRANSITIONS = ['member->super_admin'];
+
+function isValidTransition(fromRole, toRole) {
+  if (fromRole === 'super_admin' || toRole === 'super_admin') return false;
+  if (fromRole === toRole) return true;
+  if (fromRole === 'member' && toRole === 'super_admin') return false;
+  return true;
+}
 
 // GET /api/superadmin/dashboard — Global executive dashboard
 router.get('/dashboard', (req, res) => {
@@ -142,12 +154,14 @@ router.patch('/clubs/:id', (req, res) => {
 router.get('/users', (req, res) => {
   try {
     const db = getDb();
-    const { role, club_id } = req.query;
-    let query = `SELECT u.id, u.name, u.email, u.role, u.avatar_initials, u.created_at, c.name as club_name 
+    const { role, club_id, status, search } = req.query;
+    let query = `SELECT u.id, u.name, u.email, u.role, u.avatar_initials, u.created_at, u.status, u.phone, u.college, u.department, u.year, c.name as club_name
                  FROM users u LEFT JOIN clubs c ON c.id = u.club_id WHERE 1=1`;
     const params = [];
     if (role) { query += ' AND u.role = ?'; params.push(role); }
     if (club_id) { query += ' AND u.club_id = ?'; params.push(club_id); }
+    if (status) { query += ' AND u.status = ?'; params.push(status); }
+    if (search) { query += ' AND (u.name LIKE ? OR u.email LIKE ?)'; params.push(`%${search}%`, `%${search}%`); }
     query += ' ORDER BY u.created_at DESC';
     const users = db.prepare(query).all(...params);
     res.json(users);
@@ -156,23 +170,89 @@ router.get('/users', (req, res) => {
   }
 });
 
-// PATCH /api/superadmin/users/:id — Update user
+// PATCH /api/superadmin/users/:id — Update user (generic)
 router.patch('/users/:id', (req, res) => {
   try {
     const db = getDb();
-    const { name, role, club_id } = req.body;
+    const { name, role, club_id, status } = req.body;
+    const userId = parseInt(req.params.id);
+
+    const targetUser = db.prepare('SELECT role FROM users WHERE id = ?').get(userId);
+    if (!targetUser) return res.status(404).json({ error: 'User not found' });
+
     const updates = [];
     const params = [];
+
     if (name) { updates.push('name=?'); params.push(name); }
-    if (role) { updates.push('role=?'); params.push(role); }
     if (club_id !== undefined) { updates.push('club_id=?'); params.push(club_id || null); }
+    if (status && ['active', 'inactive'].includes(status)) { updates.push('status=?'); params.push(status); }
+    if (role && VALID_ROLES.includes(role)) {
+      if (!isValidTransition(targetUser.role, role)) {
+        return res.status(403).json({ error: 'Invalid role transition' });
+      }
+      updates.push('role=?'); params.push(role);
+    }
+
     if (updates.length > 0) {
-      params.push(req.params.id);
+      updates.push('updated_at=datetime("now")');
+      params.push(userId);
       db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id=?`).run(...params);
     }
-    res.json({ message: 'User updated' });
+
+    const updatedUser = db.prepare('SELECT id, name, email, role, status, club_id FROM users WHERE id=?').get(userId);
+    res.json({ message: 'User updated', user: updatedUser });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+// PATCH /api/superadmin/users/:id/role — Promote/demote user role
+router.patch('/users/:id/role', (req, res) => {
+  try {
+    const db = getDb();
+    const { role } = req.body;
+    const userId = parseInt(req.params.id);
+
+    if (!role || !VALID_ROLES.includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    const targetUser = db.prepare('SELECT role FROM users WHERE id = ?').get(userId);
+    if (!targetUser) return res.status(404).json({ error: 'User not found' });
+
+    if (!isValidTransition(targetUser.role, role)) {
+      return res.status(403).json({ error: 'Role transition not allowed. Cannot assign super_admin or invalid roles.' });
+    }
+
+    db.prepare('UPDATE users SET role = ?, updated_at = datetime("now") WHERE id = ?').run(role, userId);
+
+    const updatedUser = db.prepare('SELECT id, name, email, role, status FROM users WHERE id=?').get(userId);
+    res.json({ message: 'Role updated', user: updatedUser });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update role' });
+  }
+});
+
+// PATCH /api/superadmin/users/:id/status — Activate/deactivate account
+router.patch('/users/:id/status', (req, res) => {
+  try {
+    const db = getDb();
+    const { status } = req.body;
+    const userId = parseInt(req.params.id);
+
+    if (!status || !['active', 'inactive'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status. Must be active or inactive.' });
+    }
+
+    const targetUser = db.prepare('SELECT id FROM users WHERE id = ?').get(userId);
+    if (!targetUser) return res.status(404).json({ error: 'User not found' });
+
+    db.prepare('UPDATE users SET status = ?, updated_at = datetime("now") WHERE id = ?').run(status, userId);
+
+    const updatedUser = db.prepare('SELECT id, name, email, role, status FROM users WHERE id=?').get(userId);
+    res.json({ message: 'Status updated', user: updatedUser });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update status' });
   }
 });
 

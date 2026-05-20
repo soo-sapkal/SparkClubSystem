@@ -6,13 +6,15 @@ import {
   Clock, CheckCircle2, ArrowRight, Star, ChevronDown, Menu, X,
   TrendingUp, Globe, Lock, Award, Sparkles, Briefcase, BookOpen,
   Database, Settings, Bell, FileText, Target, Activity, ChevronRight,
-  Play, ArrowUpRight, Layers, GitBranch, GraduationCap, Brain,
-  AlertTriangle, Cpu, CircuitBoard, Building, Eye, Search,
+  Play, ArrowUpRight, Layers, GitBranch, GraduationCap,
+  AlertTriangle, Building, Eye, Search,
   ShieldCheck, UserCheck, Receipt, PieChart, LineChart,
   BadgeCheck, Megaphone, Send, ExternalLink
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import GlassSurface from '../components/ui/GlassSurface';
+import Logo from '../components/ui/Logo';
+import StarBorder from '../components/ui/StarBorder';
 
 // ═══════════════════════════════════════════════
 // ANIMATION VARIANTS
@@ -40,10 +42,6 @@ const scalePop = {
 
 const stagger = {
   visible: { transition: { staggerChildren: 0.1 } }
-};
-
-const staggerFast = {
-  visible: { transition: { staggerChildren: 0.06 } }
 };
 
 function Section({ children, className = '', id }) {
@@ -134,7 +132,6 @@ function FeatureCard({ icon: Icon, title, desc, delay = 0 }) {
 
 const NAV_LINKS = [
   { label: 'Features', href: '#features' },
-  { label: 'AI', href: '#ai' },
   { label: 'Roles', href: '#roles' },
   { label: 'Workflow', href: '#workflow' },
   { label: 'Pricing', href: '#pricing' },
@@ -156,102 +153,120 @@ function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? '' : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-500 ${scrolled ? 'pt-2 md:pt-3' : 'pt-4'
+        }`}
     >
-      {scrolled ? (
+      <motion.div
+        className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#00C8FF] via-[#7B5FFF] to-transparent origin-left"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: scrolled ? 1 : 0 }}
+        style={{ transformOrigin: 'left' }}
+        transition={{ duration: 0.3 }}
+      />
+
+      <div className="w-full px-4 md:px-8 flex justify-center relative">
         <GlassSurface
           width="100%"
-          height="64"
-          borderRadius={0}
-          backgroundOpacity={0.85}
-          saturation={1.5}
-          distortionScale={-100}
-          blur={14}
-          className="px-6 md:px-20 flex items-center justify-between border-b border-white/[0.07]"
+          height={scrolled ? 64 : 72}
+          borderRadius={scrolled ? 32 : 18}
+          backgroundOpacity={scrolled ? 0.7 : 0.05}
+          saturation={1.2}
+          distortionScale={-80}
+          blur={scrolled ? 24 : 10}
+          displace={0.8}
+          redOffset={0}
+          greenOffset={12}
+          blueOffset={28}
+          brightness={scrolled ? 85 : 55}
+          opacity={0.98}
+          mixBlendMode="screen"
+          className={`w-full transition-all duration-500 ${scrolled
+            ? 'max-w-5xl border border-black/20 shadow-[0_16px_60px_rgba(0,0,0,0.3)]'
+            : 'max-w-7xl border border-white/[0.04] shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
+            }`}
+          contentClassName={`px-6 md:px-10 flex items-center justify-between w-full h-full ${scrolled ? 'bg-black/30 backdrop-blur-2xl rounded-3xl' : ''}`}
         >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] flex items-center justify-center">
-              <Zap size={14} className="text-[#020408]" />
-            </div>
-            <span className="font-bold text-lg tracking-tight text-white">SparkClub</span>
+          {/* LOGO */}
+          <div className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate('/')}>
+            <Logo variant={scrolled ? 'black' : 'white'} className="h-10 w-[60px] rounded-xl object-contain" />
+            <span className="font-bold text-lg tracking-tight">
+              <span className="text-white">Spark</span>
+              <span className="bg-gradient-to-r from-[#00C8FF] to-[#7B5FFF] bg-clip-text text-transparent">Club</span>
+            </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8">
+          {/* DESKTOP LINKS */}
+          <div className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map(link => (
-              <a key={link.label} href={link.href} className="text-sm text-white/50 hover:text-white transition-colors tracking-wide">
-                {link.label}
+              <a
+                key={link.label}
+                href={link.href}
+                className={`group relative px-4 py-2 text-sm font-medium tracking-wide transition-colors ${scrolled ? '!text-black' : 'text-white/50 hover:text-white'}`}
+              >
+                <span className="relative z-10">{link.label}</span>
+                <span className="absolute bottom-1 left-4 right-4 h-[2px] bg-gradient-to-r from-transparent via-[#00C8FF] to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </a>
             ))}
           </div>
 
+          {/* CALL TO ACTIONS */}
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/login')} className="hidden md:block text-sm text-white/60 hover:text-white transition-colors px-4 py-2">
+            <button
+              onClick={() => navigate('/login')}
+              className="hidden md:block text-sm font-medium text-white/50 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/[0.05]"
+            >
               Log In
             </button>
-            <MagneticButton onClick={() => navigate('/login')}>
-              <div className="px-5 py-2 bg-[#00C8FF] text-[#020408] text-sm font-bold rounded-lg hover:shadow-[0_8px_30px_rgba(0,200,255,0.35)] transition-shadow">
-                Get Started
-              </div>
-            </MagneticButton>
-            <button className="md:hidden text-white/60" onClick={() => setMobileOpen(!mobileOpen)}>
+            <StarBorder as="button" color="#00C8FF" speed="4s" thickness={2} className="text-sm font-bold" onClick={() => navigate('/signup')}>
+              Get Started
+              {/* <Sparkles size={14} className="text-[#00C8FF]" /> */}
+            </StarBorder>
+            <button className="md:hidden text-white/60 p-2 hover:bg-white/[0.05] rounded-lg transition-colors" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </GlassSurface>
-      ) : (
-        <div className="h-16 px-6 md:px-20 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] flex items-center justify-center">
-              <Zap size={14} className="text-[#020408]" />
-            </div>
-            <span className="font-bold text-lg tracking-tight text-white">SparkClub</span>
-          </div>
 
-          <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map(link => (
-              <a key={link.label} href={link.href} className="text-sm text-white/50 hover:text-white transition-colors tracking-wide">
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/login')} className="hidden md:block text-sm text-white/60 hover:text-white transition-colors px-4 py-2">
-              Log In
-            </button>
-            <MagneticButton onClick={() => navigate('/login')}>
-              <div className="px-5 py-2 bg-[#00C8FF] text-[#020408] text-sm font-bold rounded-lg hover:shadow-[0_8px_30px_rgba(0,200,255,0.35)] transition-shadow">
-                Get Started
+        {/* MOBILE DROPDOWN */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-[calc(100%+0.75rem)] left-4 right-4 bg-[#080D14]/95 backdrop-blur-2xl border border-white/[0.08] rounded-2xl p-5 shadow-[0_20px_50px_rgba(0,0,0,0.6)] md:hidden z-50"
+            >
+              <div className="flex flex-col gap-1 mb-4">
+                {NAV_LINKS.map(link => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="block py-2.5 px-4 text-sm font-medium text-white/50 hover:text-white hover:bg-white/[0.03] rounded-lg transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                ))}
               </div>
-            </MagneticButton>
-            <button className="md:hidden text-white/60" onClick={() => setMobileOpen(!mobileOpen)}>
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-      )}
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="absolute top-16 left-0 right-0 bg-[#020408]/95 backdrop-blur-xl border-b border-white/[0.07] p-6 md:hidden"
-          >
-            {NAV_LINKS.map(link => (
-              <a key={link.label} href={link.href} className="block py-3 text-sm text-white/50 hover:text-white" onClick={() => setMobileOpen(false)}>
-                {link.label}
-              </a>
-            ))}
-            <button onClick={() => { navigate('/login'); setMobileOpen(false); }} className="mt-3 w-full py-3 bg-[#00C8FF] text-[#020408] text-sm font-bold rounded-lg">
-              Get Started
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div className="flex flex-col gap-2 pt-4 border-t border-white/[0.06]">
+                <button
+                  onClick={() => { navigate('/login'); setMobileOpen(false); }}
+                  className="w-full py-3 text-sm font-medium text-white/60 hover:text-white transition-colors"
+                >
+                  Log In
+                </button>
+                <StarBorder as="button" color="#00C8FF" speed="4s" thickness={1} className="w-full" onClick={() => { navigate('/signup'); setMobileOpen(false); }}>
+                  <span className="flex items-center justify-center gap-2 w-full">
+                    Get Started
+                    <Sparkles size={14} className="text-[#00C8FF]" />
+                  </span>
+                </StarBorder>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.nav>
   );
 }
@@ -289,17 +304,6 @@ function HeroSection() {
         </div>
       </motion.div>
 
-      <motion.div className="absolute top-40 right-[5%] hidden xl:block" animate={{ y: [0, 15, 0], x: [0, 8, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}>
-        <div className="bg-[#080D14]/80 backdrop-blur-sm border border-white/[0.07] rounded-xl p-4 w-52">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-5 h-5 rounded-md bg-[#7B5FFF]/[0.1] flex items-center justify-center"><Brain size={10} className="text-[#7B5FFF]" /></div>
-            <span className="text-[10px] text-white/40 tracking-wider uppercase font-mono">AI Review</span>
-          </div>
-          <p className="text-sm font-medium text-white">Anomaly Detected</p>
-          <p className="text-[10px] text-[#FFB800] font-mono">Flagged for review</p>
-        </div>
-      </motion.div>
-
       <motion.div className="absolute bottom-40 left-[8%] hidden 2xl:block" animate={{ y: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}>
         <div className="bg-[#080D14]/80 backdrop-blur-sm border border-white/[0.07] rounded-xl p-4 w-48">
           <div className="flex items-center gap-2 mb-2">
@@ -324,15 +328,15 @@ function HeroSection() {
 
       {/* Center content */}
       <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        <motion.div
+        {/* <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00C8FF]/20 bg-[#00C8FF]/[0.05] mb-8"
         >
           <div className="w-1.5 h-1.5 rounded-full bg-[#00FF9F] animate-pulse" />
-          <span className="text-[11px] text-[#00C8FF] font-mono tracking-widest uppercase">SPARKCLUB · AI-POWERED GOVERNANCE PLATFORM</span>
-        </motion.div>
+          <span className="text-[11px] text-[#00C8FF] font-mono tracking-widest uppercase">SPARKCLUB · GOVERNANCE PLATFORM</span>
+        </motion.div> */}
 
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
@@ -352,7 +356,7 @@ function HeroSection() {
           transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          The unified AI command layer for every club, every budget, every decision across your entire institution.
+          The unified governance platform for every club, every budget, every decision across your entire institution.
         </motion.p>
 
         <motion.div
@@ -374,15 +378,6 @@ function HeroSection() {
             <span className="font-medium text-sm">Watch 90-Second Demo</span>
           </button>
         </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="mt-8 text-sm text-white/30 font-mono"
-        >
-          Trusted by 40+ institutions · 12,000+ active members · ₹4.2Cr managed
-        </motion.p>
       </div>
 
       {/* Data ticker */}
@@ -396,7 +391,7 @@ function HeroSection() {
             <div key={i} className="flex items-center gap-8 text-xs font-mono text-white/30 px-4">
               <span className="text-[#00FF9F]">BUDGET APPROVED</span> <span>₹48,000</span> <span className="text-[#00C8FF]">TECH CLUB</span>
               <span className="text-white/10">·</span>
-              <span className="text-[#7B5FFF]">AI FLAGGED</span> <span>DUPLICATE EXPENSE</span> <span className="text-[#FFB800]">RESOLVED</span>
+              <span className="text-[#7B5FFF]">ACTIVITY FLAGGED</span> <span>DUPLICATE EXPENSE</span> <span className="text-[#FFB800]">RESOLVED</span>
               <span className="text-white/10">·</span>
               <span className="text-[#00FF9F]">EVENT REGISTERED</span> <span>340 ATTENDEES</span>
               <span className="text-white/10">·</span>
@@ -509,9 +504,8 @@ function FeatureAlpha() {
                       <div className="h-full rounded-full" style={{ width: club.spent, background: club.color }} />
                     </div>
                   </div>
-                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${
-                    club.status === 'active' ? 'bg-[#00FF9F]/[0.1] text-[#00FF9F]' : 'bg-[#FFB800]/[0.1] text-[#FFB800]'
-                  }`}>{club.spent}</span>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${club.status === 'active' ? 'bg-[#00FF9F]/[0.1] text-[#00FF9F]' : 'bg-[#FFB800]/[0.1] text-[#FFB800]'
+                    }`}>{club.spent}</span>
                 </div>
               ))}
             </div>
@@ -523,7 +517,7 @@ function FeatureAlpha() {
 }
 
 // ═══════════════════════════════════════════════
-// FEATURE BETA — AI Finance
+// FEATURE BETA — Finance
 // ═══════════════════════════════════════════════
 
 function FeatureBeta() {
@@ -531,12 +525,12 @@ function FeatureBeta() {
     <Section className="py-24 md:py-32 px-6 bg-gradient-to-b from-transparent via-[#080D14]/50 to-transparent">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <motion.p variants={fadeUp} className="text-[11px] text-[#7B5FFF] font-mono tracking-[0.15em] uppercase mb-4">Intelligent Finance</motion.p>
+          <motion.p variants={fadeUp} className="text-[11px] text-[#7B5FFF] font-mono tracking-[0.15em] uppercase mb-4">Smart Finance</motion.p>
           <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold text-white tracking-tight leading-[1.1] mb-6" style={{ fontFamily: "'Syne', sans-serif" }}>
-            Budgets That<br />Think Ahead.
+            Budgets That<br />Stay on Track.
           </motion.h2>
           <motion.p variants={fadeUp} className="text-lg text-white/50 max-w-xl mx-auto leading-relaxed">
-            AI-powered expense tracking, anomaly detection, and budget forecasting ensure every rupee is accounted for.
+            Real-time expense tracking, budget forecasting, and financial oversight ensure every rupee is accounted for.
           </motion.p>
         </div>
 
@@ -545,14 +539,14 @@ function FeatureBeta() {
             {
               icon: BarChart3,
               title: 'Smart Budgets',
-              desc: 'AI predicts overspend risk 2 weeks before it happens. Category-level forecasts with confidence intervals.',
+              desc: 'Category-level budget tracking with real-time spend monitoring and forecast alerts.',
               color: 'from-[#00C8FF] to-[#00C8FF]/50',
               bgGrad: 'from-[#00C8FF]/5 to-transparent',
             },
             {
               icon: AlertTriangle,
-              title: 'Anomaly Detection',
-              desc: 'Flags duplicate expenses, unusual patterns, and policy violations in real-time with severity scoring.',
+              title: 'Expense Alerts',
+              desc: 'Flags duplicate expenses, unusual patterns, and budget threshold breaches for review.',
               color: 'from-[#7B5FFF] to-[#7B5FFF]/50',
               bgGrad: 'from-[#7B5FFF]/5 to-transparent',
             },
@@ -586,105 +580,7 @@ function FeatureBeta() {
   );
 }
 
-// ═══════════════════════════════════════════════
-// AI CORE SECTION
-// ═══════════════════════════════════════════════
 
-function AICoreSection() {
-  return (
-    <Section id="ai" className="py-24 md:py-32 px-6 relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(ellipse_60%_60%_at_center,rgba(123,95,255,0.15)_0%,rgba(0,200,255,0.08)_50%,transparent_100%)]" />
-      </div>
-
-      <div className="max-w-7xl mx-auto relative">
-        <div className="text-center mb-16">
-          <motion.p variants={fadeUp} className="text-[11px] text-[#7B5FFF] font-mono tracking-[0.15em] uppercase mb-4">Artificial Intelligence</motion.p>
-          <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold text-white tracking-tight leading-[1.1] mb-6" style={{ fontFamily: "'Syne', sans-serif" }}>
-            The Brain Behind<br />Every Decision.
-          </motion.h2>
-          <motion.p variants={fadeUp} className="text-lg text-white/50 max-w-2xl mx-auto leading-relaxed">
-            SparkClub's AI engine processes every transaction, every event request, every member interaction — learning your institution's patterns to deliver proactive intelligence.
-          </motion.p>
-          <motion.div variants={fadeUp} className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#7B5FFF]/[0.08] border border-[#7B5FFF]/[0.2]">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#7B5FFF] animate-pulse" />
-            <span className="text-[10px] text-[#B49FFF] font-mono tracking-wider uppercase">Powered by Adaptive AI · LIVE</span>
-          </motion.div>
-        </div>
-
-        {/* AI Orb + Capabilities */}
-        <div className="relative flex flex-col lg:flex-row items-center justify-center gap-12">
-          {/* Orb */}
-          <motion.div variants={scalePop} className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0">
-            {/* Outer ring */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0 rounded-full border-2 border-[#00C8FF]/20 border-t-[#00C8FF]/60"
-            />
-            {/* Inner mesh */}
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-8 rounded-full border border-[#7B5FFF]/15 border-b-[#7B5FFF]/40"
-            />
-            {/* Core */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                animate={{ scale: [1, 1.15, 1], opacity: [0.6, 1, 0.6] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] shadow-[0_0_60px_rgba(0,200,255,0.3)]"
-              />
-            </div>
-            {/* Orbiting nodes */}
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
-              <motion.div
-                key={i}
-                className="absolute inset-0"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 12 + i * 2, repeat: Infinity, ease: 'linear' }}
-                style={{ transformOrigin: 'center' }}
-              >
-                <div
-                  className="absolute w-3 h-3 rounded-full bg-[#7B5FFF]/40 border border-[#7B5FFF]/60"
-                  style={{
-                    top: '50%',
-                    left: '50%',
-                    transform: `rotate(${angle}deg) translateX(${140}px)`,
-                    transformOrigin: 'center',
-                  }}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Capabilities */}
-          <div className="grid grid-cols-2 gap-4 max-w-lg">
-            {[
-              { icon: BarChart3, label: 'Smart Budget Forecasting' },
-              { icon: AlertTriangle, label: 'Anomaly Detection' },
-              { icon: ShieldCheck, label: 'Policy Compliance AI' },
-              { icon: FileText, label: 'Auto-Categorization' },
-              { icon: Calendar, label: 'Event Load Prediction' },
-              { icon: Users, label: 'Member Sentiment Analysis' },
-              { icon: GitBranch, label: 'Approval Route Intelligence' },
-              { icon: Brain, label: 'Natural Language Reports' },
-            ].map((cap, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                className="flex items-center gap-3 p-3 rounded-lg bg-[#080D14]/60 border border-white/[0.05] hover:border-[#7B5FFF]/20 transition-colors"
-              >
-                <cap.icon size={14} className="text-[#7B5FFF] flex-shrink-0" />
-                <span className="text-xs text-white/60">{cap.label}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </Section>
-  );
-}
 
 // ═══════════════════════════════════════════════
 // ROLE GOVERNANCE
@@ -714,8 +610,8 @@ function RoleGovernance() {
       icon: Wallet,
       color: 'from-[#00FF9F] to-[#00FF9F]/50',
       superpower: 'Zero financial surprises',
-      desc: 'Real-time budget tracking, AI anomaly alerts, and automated reconciliation across all club finances.',
-      features: ['Budget monitoring', 'AI anomaly alerts', 'Transaction ledger', 'Export reports'],
+      desc: 'Real-time budget tracking, expense alerts, and automated reconciliation across all club finances.',
+      features: ['Budget monitoring', 'Expense alerts', 'Transaction ledger', 'Export reports'],
     },
     {
       role: 'Faculty Advisor',
@@ -753,9 +649,8 @@ function RoleGovernance() {
                 key={i}
                 variants={fadeUp}
                 onClick={() => setActiveRole(i)}
-                className={`cursor-pointer p-4 rounded-xl border transition-all duration-300 ${
-                  activeRole === i ? 'border-[#00C8FF]/20 bg-[#080D14]' : 'border-white/[0.05] hover:border-white/[0.1]'
-                }`}
+                className={`cursor-pointer p-4 rounded-xl border transition-all duration-300 ${activeRole === i ? 'border-[#00C8FF]/20 bg-[#080D14]' : 'border-white/[0.05] hover:border-white/[0.1]'
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${r.color} flex items-center justify-center flex-shrink-0`}>
@@ -809,9 +704,9 @@ function RoleGovernance() {
 function WorkflowSection() {
   const workflows = [
     { step: 1, title: 'Club Member Submits Request', desc: 'A member submits a budget or reimbursement request with justification and receipts.', icon: FileText },
-    { step: 2, title: 'AI Engine Reviews', desc: 'Automatic policy check, anomaly detection, and risk scoring before human review.', icon: Brain },
+    { step: 2, title: 'System Reviews', desc: 'Automated validation of request details, budget availability, and policy compliance checks.', icon: FileCheck },
     { step: 3, title: 'Finance Officer Validates', desc: 'The finance officer reviews flagged items and verifies budget availability.', icon: Wallet },
-    { step: 4, title: 'Club President Approves', desc: 'Final sign-off from the club head with full context and AI recommendations.', icon: Target },
+    { step: 4, title: 'Club President Approves', desc: 'Final sign-off from the club head with full context and recommendations.', icon: Target },
     { step: 5, title: 'Funds Released', desc: 'Once all approvals are in place, funds are disbursed and the transaction is recorded.', icon: Zap },
     { step: 6, title: 'Audit Trail Generated', desc: 'Every action is permanently logged in the tamper-proof audit trail for compliance.', icon: Shield },
   ];
@@ -825,7 +720,7 @@ function WorkflowSection() {
             From Request<br />to Release.
           </motion.h2>
           <motion.p variants={fadeUp} className="text-lg text-white/50 max-w-lg mx-auto">
-            A complete multi-stage approval workflow — fully automated, AI-assisted, and audited.
+            A complete multi-stage approval workflow — fully structured and audited.
           </motion.p>
         </div>
 
@@ -905,7 +800,7 @@ function FeatureGrid() {
 function Testimonials() {
   const testimonials = [
     { name: 'Dr. Priya Menon', role: 'Dean of Student Affairs, Manipal University', text: 'SparkClub transformed how we govern 47 clubs. What used to take a committee now happens automatically.', avatar: 'PM' },
-    { name: 'Rohit Sharma', role: 'Student Finance Head, IIT Bombay', text: 'Our finance team reclaimed 15 hours per week. The AI flags things before we even notice them.', avatar: 'RS' },
+    { name: 'Rohit Sharma', role: 'Student Finance Head, IIT Bombay', text: 'Our finance team reclaimed 15 hours per week. The dashboard flags issues before we even notice them.', avatar: 'RS' },
     { name: 'Ananya Krishnan', role: 'Club President, BITS Pilani', text: 'For the first time, every club has a real professional experience. Members actually show up and engage.', avatar: 'AK' },
   ];
 
@@ -1005,10 +900,10 @@ function Pricing() {
 function FAQ() {
   const [activeFAQ, setActiveFAQ] = useState(null);
   const faqs = [
-    { q: 'What is SparkClub?', a: 'SparkClub is a multi-tenant ERP platform for educational institutions to manage student club finances, events, student development, and compliance — all in one unified system.' },
+    { q: 'What is SparkClub?', a: 'SparkClub is a multi-tenant governance platform for educational institutions to manage student club finances, events, student development, and compliance — all in one unified system.' },
     { q: 'How does multi-club management work?', a: 'Super Admins can manage multiple clubs from a single dashboard. Each club has its own isolated data, users, and budgets while sharing institutional policies.' },
     { q: 'What roles are supported?', a: 'SparkClub supports 5 roles: Institutional Administrator, Club President, Finance Officer, Faculty Advisor, and Club Member — each with purpose-built dashboards.' },
-    { q: 'Is AI optional?', a: 'Yes. AI features enhance the platform but are not required. All core functionality — budgets, approvals, events — works without AI. AI adds predictive insights and anomaly detection.' },
+    { q: 'How does the approval workflow work?', a: 'SparkClub uses a configurable multi-stage approval system. Requests pass through Finance Officer validation and Club President sign-off before funds are released. Every step is logged in a tamper-proof audit trail.' },
     { q: 'Can institutions customize workflows?', a: 'Yes. Institutions can customize approval chains, budget categories, notification rules, and role permissions to fit their specific governance structure.' },
     { q: 'How secure is financial data?', a: 'All financial data is protected with JWT authentication, role-based access control, and tamper-proof audit logging. Data is stored securely with SQL parameterization.' },
   ];
@@ -1056,31 +951,59 @@ function CTASection() {
   return (
     <Section className="py-24 md:py-32 px-6 relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(ellipse_60%_60%_at_center,rgba(0,200,255,0.15)_0%,rgba(123,95,255,0.20)_50%,rgba(0,200,255,0.10)_100%)]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(ellipse_60%_60%_at_center,rgba(0,200,255,0.12)_0%,rgba(123,95,255,0.15)_40%,transparent_70%)]" />
+        <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '80px 80px' }} />
       </div>
-      <div className="max-w-3xl mx-auto text-center relative z-10">
-        <motion.p variants={fadeUp} className="text-[11px] text-[#00C8FF] font-mono tracking-[0.15em] uppercase mb-4">Early Access Program</motion.p>
-        <motion.h2 variants={fadeUp} className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight mb-6 leading-[0.95]" style={{ fontFamily: "'Syne', sans-serif" }}>
-          Be First.<br />
-          <span className="bg-gradient-to-r from-[#00C8FF] to-[#7B5FFF] bg-clip-text text-transparent">Lead First.</span>
+
+      <div className="max-w-4xl mx-auto text-center relative z-10">
+        <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00C8FF]/20 bg-[#00C8FF]/[0.05] mb-8">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#00FF9F] animate-pulse" />
+          <span className="text-[11px] text-[#00C8FF] font-mono tracking-widest uppercase">Limited Founding Spots Available</span>
+        </motion.div>
+
+        <motion.h2 variants={fadeUp} className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[0.95]" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <span className="text-white">Ready to Transform</span><br />
+          <span className="bg-gradient-to-r from-[#00C8FF] via-[#00C8FF] to-[#7B5FFF] bg-clip-text text-transparent">Club Governance?</span>
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-lg text-white/50 mb-10 max-w-xl mx-auto leading-relaxed">
-          SparkClub is expanding to select institutions. Early access partners receive dedicated onboarding, custom configuration, and founding member pricing.
+
+        <motion.p variants={fadeUp} className="text-lg md:text-xl text-white/50 mb-12 max-w-2xl mx-auto leading-relaxed">
+          Join 40+ institutions already using SparkClub. Get priority onboarding, custom configurations, and exclusive founding member pricing — limited to first 50 institutions.
         </motion.p>
-        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <MagneticButton onClick={() => navigate('/login')}>
-            <div className="flex items-center gap-3 px-10 py-4 bg-[#00C8FF] text-[#020408] font-bold rounded-lg hover:shadow-[0_8px_30px_rgba(0,200,255,0.35)] transition-all">
-              Request Founding Access <ArrowRight size={18} />
+
+        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-5">
+          <MagneticButton onClick={() => navigate('/signup')}>
+            <div className="group relative px-8 py-4 bg-[#00C8FF] text-[#020408] font-bold rounded-xl overflow-hidden">
+              <span className="relative z-10 flex items-center gap-3">
+                Get Early Access
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#7B5FFF] to-[#00C8FF] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
           </MagneticButton>
-          <button className="px-10 py-4 border border-white/[0.1] rounded-lg text-white/60 hover:text-white hover:border-white/[0.2] transition-all font-medium text-sm">
-            Book Demo
+          <button className="group flex items-center gap-3 px-8 py-4 border border-white/[0.1] rounded-xl text-white/60 hover:text-white hover:border-white/[0.25] hover:bg-white/[0.03] transition-all font-medium text-sm">
+            <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center group-hover:bg-white/[0.1] transition-colors">
+              <Play size={16} className="ml-0.5" />
+            </div>
+            <span>Watch Demo</span>
           </button>
         </motion.div>
-        <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-white/30">
-          <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-[#00FF9F]" /> No credit card required</span>
-          <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-[#00FF9F]" /> Onboarding in 48 hours</span>
-          <span className="flex items-center gap-1.5"><CheckCircle2 size={12} className="text-[#00FF9F]" /> Cancel or pause anytime</span>
+
+        <motion.div variants={fadeUp} className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto">
+          {[
+            { icon: Zap, title: '48-Hour Setup', desc: 'From signup to fully configured dashboard' },
+            { icon: Shield, title: 'Zero Risk', desc: 'Free trial with no credit card required' },
+            { icon: Award, title: 'Founding Price', desc: 'Lock in rates for early partners' },
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-[#00C8FF]/20 hover:bg-white/[0.03] transition-all">
+              <div className="w-12 h-12 rounded-xl bg-[#00C8FF]/[0.08] border border-[#00C8FF]/[0.15] flex items-center justify-center">
+                <item.icon size={20} className="text-[#00C8FF]" />
+              </div>
+              <div>
+                <p className="font-semibold text-white text-sm">{item.title}</p>
+                <p className="text-xs text-white/40 mt-1">{item.desc}</p>
+              </div>
+            </div>
+          ))}
         </motion.div>
       </div>
     </Section>
@@ -1098,10 +1021,10 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] flex items-center justify-center"><Zap size={14} className="text-[#020408]" /></div>
+              <Logo variant="white" className="h-8 w-12 object-contain" />
               <span className="font-bold text-lg text-white">SparkClub</span>
             </div>
-            <p className="text-xs text-white/30 leading-relaxed mb-4">The AI-powered command layer for multi-club governance, finance, and student development.</p>
+            <p className="text-xs text-white/30 leading-relaxed mb-4">The unified command layer for multi-club governance, finance, and student development.</p>
             <div className="flex items-center gap-2">
               {[GitBranch, Globe, Lock].map((Icon, i) => (
                 <a key={i} href="#" className="w-8 h-8 rounded-lg bg-white/[0.03] flex items-center justify-center hover:bg-white/[0.08] transition-colors">
@@ -1150,6 +1073,8 @@ export default function LandingPage() {
         ::-webkit-scrollbar-thumb { background: #1a2332; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #2a3a4e; }
         html { scroll-behavior: smooth; }
+        @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .animate-gradient { animation: gradient 3s ease infinite; }
       `}</style>
 
       <Navbar />
@@ -1159,7 +1084,6 @@ export default function LandingPage() {
         <StatsBar />
         <FeatureAlpha />
         <FeatureBeta />
-        <AICoreSection />
         <RoleGovernance />
         <WorkflowSection />
         <FeatureGrid />

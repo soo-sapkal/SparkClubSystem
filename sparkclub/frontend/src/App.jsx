@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/layout/Layout';
 import LoginPage         from './pages/LoginPage';
+import SignupPage        from './pages/SignupPage';
 import LandingPage       from './pages/LandingPage';
 import DashboardPage     from './pages/DashboardPage';
 import BudgetsPage       from './pages/BudgetsPage';
@@ -50,7 +51,8 @@ function ClubHeadRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="flex items-center justify-center h-screen text-slate-400">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== 'club_head') return <Navigate to="/dashboard" replace />;
+  const clubHeadRoles = ['club_head', 'student_head', 'department_lead', 'event_lead'];
+  if (!clubHeadRoles.includes(user.role)) return <Navigate to="/student/dashboard" replace />;
   return children;
 }
 
@@ -58,7 +60,8 @@ function FacultyRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="flex items-center justify-center h-screen text-slate-400">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== 'faculty') return <Navigate to="/dashboard" replace />;
+  const facultyRoles = ['faculty', 'faculty_advisor', 'faculty_coordinator'];
+  if (!facultyRoles.includes(user.role)) return <Navigate to="/student/dashboard" replace />;
   return children;
 }
 
@@ -74,7 +77,16 @@ function SuperAdminRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="flex items-center justify-center h-screen text-slate-400">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== 'super_admin') return <Navigate to="/dashboard" replace />;
+  if (user.role !== 'super_admin') return <Navigate to="/student/dashboard" replace />;
+  return children;
+}
+
+function TreasurerRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="flex items-center justify-center h-screen text-slate-400">Loading...</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  const treasurerRoles = ['treasurer', 'admin'];
+  if (!treasurerRoles.includes(user.role)) return <Navigate to="/student/dashboard" replace />;
   return children;
 }
 
@@ -83,6 +95,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
 
       {/* Protected routes with Layout */}
       <Route element={
@@ -106,14 +119,14 @@ export default function App() {
         <Route path="audit"         element={<AuditLogPage />} />
 
         {/* Treasurer/Admin Finance Routes */}
-        <Route path="dashboard"     element={<DashboardPage />} />
+        <Route path="dashboard"     element={<TreasurerRoute><DashboardPage /></TreasurerRoute>} />
         <Route path="budgets"        element={<BudgetsPage />} />
         <Route path="transactions"  element={<TransactionsPage />} />
         <Route path="funding"        element={<FundingPage />} />
         <Route path="reports"        element={<ReportsPage />} />
       </Route>
 
-      {/* Faculty Coordinator Routes - separate Layout wrapper */}
+      {/* Faculty Coordinator Routes */}
       <Route path="/faculty" element={
         <ProtectedRoute>
           <Layout />

@@ -28,17 +28,34 @@ function requireRole(...roles) {
 }
 
 function requireClubHead(req, res, next) {
-  if (!req.user || req.user.role !== 'club_head') {
+  const clubHeadRoles = ['club_head', 'student_head', 'department_lead', 'event_lead'];
+  if (!req.user || !clubHeadRoles.includes(req.user.role)) {
     return res.status(403).json({ error: 'Club Head access required' });
   }
   next();
 }
 
 function requireTreasurer(req, res, next) {
-  if (!req.user || !['treasurer', 'admin'].includes(req.user.role)) {
+  const treasurerRoles = ['treasurer', 'admin'];
+  if (!req.user || !treasurerRoles.includes(req.user.role)) {
     return res.status(403).json({ error: 'Treasurer access required' });
   }
   next();
 }
 
-module.exports = { authenticateToken, requireRole, requireClubHead, requireTreasurer };
+function requireSuperAdmin(req, res, next) {
+  if (!req.user || req.user.role !== 'super_admin') {
+    return res.status(403).json({ error: 'Super Admin access required' });
+  }
+  next();
+}
+
+function requireFaculty(req, res, next) {
+  const facultyRoles = ['faculty', 'faculty_advisor', 'faculty_coordinator'];
+  if (!req.user || !facultyRoles.includes(req.user.role)) {
+    return res.status(403).json({ error: 'Faculty access required' });
+  }
+  next();
+}
+
+module.exports = { authenticateToken, requireRole, requireClubHead, requireTreasurer, requireSuperAdmin, requireFaculty };
