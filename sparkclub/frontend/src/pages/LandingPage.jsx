@@ -12,6 +12,7 @@ import {
   BadgeCheck, Megaphone, Send, ExternalLink
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import GlassSurface from '../components/ui/GlassSurface';
 
 // ═══════════════════════════════════════════════
 // ANIMATION VARIANTS
@@ -155,38 +156,100 @@ function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 h-16 px-6 md:px-20 flex items-center justify-between transition-all duration-500 ${
-        scrolled ? 'bg-[#020408]/85 backdrop-blur-xl border-b border-white/[0.07]' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled ? '' : 'bg-transparent'
       }`}
     >
-      <div className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] flex items-center justify-center">
-          <Zap size={14} className="text-[#020408]" />
+      {scrolled ? (
+        <GlassSurface
+          width="100%"
+          height="64"
+          borderRadius={0}
+          backgroundOpacity={0.85}
+          saturation={1.5}
+          distortionScale={-100}
+          blur={14}
+          className="px-6 md:px-20 flex items-center justify-between border-b border-white/[0.07]"
+        >
+          <NavbarContent navigate={navigate} setMobileOpen={setMobileOpen} mobileOpen={mobileOpen} />
+        </GlassSurface>
+      ) : (
+        <div className="h-16 px-6 md:px-20 flex items-center justify-between">
+          <NavbarContent navigate={navigate} setMobileOpen={setMobileOpen} mobileOpen={mobileOpen} />
         </div>
-        <span className="font-bold text-lg tracking-tight text-white">SparkClub</span>
-      </div>
-
-      <div className="hidden md:flex items-center gap-8">
-        {NAV_LINKS.map(link => (
-          <a key={link.label} href={link.href} className="text-sm text-white/50 hover:text-white transition-colors tracking-wide">
-            {link.label}
-          </a>
-        ))}
-      </div>
-
-      <div className="flex items-center gap-3">
-        <button onClick={() => navigate('/login')} className="hidden md:block text-sm text-white/60 hover:text-white transition-colors px-4 py-2">
-          Log In
-        </button>
-        <MagneticButton onClick={() => navigate('/login')}>
-          <div className="px-5 py-2 bg-[#00C8FF] text-[#020408] text-sm font-bold rounded-lg hover:shadow-[0_8px_30px_rgba(0,200,255,0.35)] transition-shadow">
-            Get Started
+      )}
+      {scrolled ? (
+        <GlassSurface
+          width="100%"
+          height="64"
+          borderRadius={0}
+          backgroundOpacity={0.85}
+          saturation={1.5}
+          distortionScale={-100}
+          blur={14}
+          className="px-6 md:px-20 flex items-center justify-between border-b border-white/[0.07]"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] flex items-center justify-center">
+              <Zap size={14} className="text-[#020408]" />
+            </div>
+            <span className="font-bold text-lg tracking-tight text-white">SparkClub</span>
           </div>
-        </MagneticButton>
-        <button className="md:hidden text-white/60" onClick={() => setMobileOpen(!mobileOpen)}>
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
+
+          <div className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map(link => (
+              <a key={link.label} href={link.href} className="text-sm text-white/50 hover:text-white transition-colors tracking-wide">
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate('/login')} className="hidden md:block text-sm text-white/60 hover:text-white transition-colors px-4 py-2">
+              Log In
+            </button>
+            <MagneticButton onClick={() => navigate('/login')}>
+              <div className="px-5 py-2 bg-[#00C8FF] text-[#020408] text-sm font-bold rounded-lg hover:shadow-[0_8px_30px_rgba(0,200,255,0.35)] transition-shadow">
+                Get Started
+              </div>
+            </MagneticButton>
+            <button className="md:hidden text-white/60" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </GlassSurface>
+      ) : (
+        <div className="h-16 px-6 md:px-20 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C8FF] to-[#7B5FFF] flex items-center justify-center">
+              <Zap size={14} className="text-[#020408]" />
+            </div>
+            <span className="font-bold text-lg tracking-tight text-white">SparkClub</span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map(link => (
+              <a key={link.label} href={link.href} className="text-sm text-white/50 hover:text-white transition-colors tracking-wide">
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate('/login')} className="hidden md:block text-sm text-white/60 hover:text-white transition-colors px-4 py-2">
+              Log In
+            </button>
+            <MagneticButton onClick={() => navigate('/login')}>
+              <div className="px-5 py-2 bg-[#00C8FF] text-[#020408] text-sm font-bold rounded-lg hover:shadow-[0_8px_30px_rgba(0,200,255,0.35)] transition-shadow">
+                Get Started
+              </div>
+            </MagneticButton>
+            <button className="md:hidden text-white/60" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </div>
+      )}
 
       <AnimatePresence>
         {mobileOpen && (
