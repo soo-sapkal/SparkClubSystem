@@ -1,10 +1,18 @@
-{
-  "buildpacks": [
-    {
-      "builder": "heroku/nodejs"
-    }
-  ],
-  "database": {
-    "create": "sparkclub.db"
-  }
-}
+services:
+  - type: web
+    name: sparkclub-backend
+    env: node
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: "3001"
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+    disk:
+      name: sparkclub_db
+      mountPath: /var/data
+      sizeGB: 1
